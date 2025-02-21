@@ -1,0 +1,23 @@
+# FastAPI framework for the backend
+fastapi
+
+# ASGI server for running FastAPI
+uvicorn
+
+# SQLAlchemy ORM for database interactions
+sqlalchemy
+
+# Pydantic for data validation and serialization
+pydantic
+
+# Python-dotenv for environment variables
+python-dotenv
+
+# Requests (for calling MATLAB API if needed)
+requests
+
+# Passlib (for password hashing)
+passlib[bcrypt]
+
+# JWT authentication (for token-based authentication)
+pyjwt
