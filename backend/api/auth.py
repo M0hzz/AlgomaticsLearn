@@ -1,10 +1,16 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db import SessionLocal
-from services.auth_service import hash_password, verify_password, create_access_token
-from models.user import User
+from ..database import SessionLocal  #
+from backend.services.auth_service import register_user, authenticate_user
+from pydantic import BaseModel
 
 router = APIRouter()
+
+# Define request model
+class AuthRequest(BaseModel):
+    username: str
+    password: str
+    account_type: str  # New field for account type
 
 # Dependency to get DB session
 def get_db():
@@ -14,29 +20,18 @@ def get_db():
     finally:
         db.close()
 
-# User signup route
+# Signup endpoint
 @router.post("/signup")
-def signup(username: str, password: str, db: Session = Depends(get_db)):
-    # Check if user already exists
-    existing_user = db.query(User).filter(User.username == username).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="User already exists")
-
-    # Hash password and create user
-    new_user = User(username=username, password=hash_password(password))
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+def signup(request: AuthRequest, db: Session = Depends(get_db)):
+    user = register_user(db, request.username, request.password, request.account_type)
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid account type or user exists")
     return {"message": "User created successfully"}
 
-# User login route
+# Login endpoint
 @router.post("/login")
-def login(username: str, password: str, db: Session = Depends(get_db)):
-    # Find user in DB
-    user = db.query(User).filter(User.username == username).first()
-    if not user or not verify_password(password, user.password):
+def login(request: AuthRequest, db: Session = Depends(get_db)):
+    user = authenticate_user(db, request.username, request.password)
+    if not user:
         raise HTTPException(status_code=401, detail="Invalid username or password")
-
-    # Generate JWT token
-    token = create_access_token({"sub": user.username})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"message": "Login successful", "account_type": user.account_type}
