@@ -1,10 +1,10 @@
-from typing import Generator, Optional
+from typing import Generator
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from .database import SessionLocal
-from .core.config import settings
+from backend.app.core.config import settings
 from .users.models import User
 from .users import service as user_service
 
