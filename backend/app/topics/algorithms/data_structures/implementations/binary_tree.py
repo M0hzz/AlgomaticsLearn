@@ -1,3 +1,5 @@
+#binary tree
+
 class Node:
     def __init__(self, key):
         self.left = None  # Left child
