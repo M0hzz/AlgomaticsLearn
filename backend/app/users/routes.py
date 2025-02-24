@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Any, List
 from sqlalchemy.orm import Session
 from datetime import timedelta
 
 from . import schemas
-from ..core.config import settings
-from ..core.security import create_access_token
-from ..dependencies import get_db, get_current_user, get_current_active_user, get_current_admin_user
+from backend.app.core.config import settings
+from backend.app.core.security import create_access_token
+from ..dependencies import get_db, get_current_active_user, get_current_admin_user
 from . import service
 
 router = APIRouter()
