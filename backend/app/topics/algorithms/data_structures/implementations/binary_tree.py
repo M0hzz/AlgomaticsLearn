@@ -48,6 +48,9 @@ class BinaryTree:
         self.inorder_traversal(self.root)
         print()
 
+
+
+
 # Example
 tree = BinaryTree()  # Create a new empty binary tree
 tree.insert(10)  # Insert values into the tree
