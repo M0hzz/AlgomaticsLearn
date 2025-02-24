@@ -1,35 +1,29 @@
+# backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.core.config import settings
-from .users.routes import router as users_router
 
 app = FastAPI(
-    title=settings.PROJECT_NAME,
-    version=settings.VERSION,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    title="Math & Algorithms Platform",
+    description="Educational platform for mathematics and algorithms",
+    version="0.1.0",
 )
 
-# Set up CORS for wix integration
-if settings.BACKEND_CORS_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        #allow_origins = ["*.wix.com", "your-wix-domain.com"],
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-# Include routers
-app.include_router(users_router, prefix=settings.API_V1_STR, tags=["users"])
+# CORS settings to allow requests from your frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
-def read_root():
-    return {
-        "message": "Welcome to Math & DSA Learning Platform API",
-        "documentation": "/docs",
-        "version": settings.VERSION
-    }
+async def root():
+    return {"message": "Welcome to Math & Algorithms API"}
+
+# You'll include routers here later
+# from app.api.v1.api import api_router
+# app.include_router(api_router, prefix="/api/v1")
 
 if __name__ == "__main__":
     import uvicorn
