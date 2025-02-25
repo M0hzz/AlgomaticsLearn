@@ -1,8 +1,9 @@
 # backend/app/api/v1/endpoints/auth.py
-from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from datetime import timedelta
+from typing import Dict, Any
 
 from app.core.security import create_access_token, verify_password
 from app.database import get_db
