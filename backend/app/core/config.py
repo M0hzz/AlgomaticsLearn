@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
-from typing import List, Optional
-from pydantic import PostgresDsn, validator
+from typing import Any, List, Optional
+from pydantic import PostgresDsn, validator, AnyUrl
 import secrets
 
 class Settings(BaseSettings):
@@ -22,19 +22,24 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"
     POSTGRES_DB: str = "math_dsa_db"
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    #SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    SQLALCHEMY_DATABASE_URI: Optional[str] = None
 
     @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: dict) -> Any:
+    # def assemble_db_connection(cls, v: Optional[str], values: dict) -> Any:
+    def assemble_db_connection(cls, v: Optional[str], values: dict) -> str:
+
         if isinstance(v, str):
             return v
-        return PostgresDsn.build(
-            scheme="postgresql",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
-            path=f"/{values.get('POSTGRES_DB') or ''}"
-        )
+
+        return f"postgresql://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}@{values.get('POSTGRES_SERVER')}/{values.get('POSTGRES_DB')}"
+        #return PostgresDsn.build(
+           # scheme="postgresql",
+           # user=values.get("POSTGRES_USER"),
+           # password=values.get("POSTGRES_PASSWORD"),
+           # host=values.get("POSTGRES_SERVER"),
+           # path=f"/{values.get('POSTGRES_DB') or ''}"
+
 
     class Config:
         case_sensitive = True
