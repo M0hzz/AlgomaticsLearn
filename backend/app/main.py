@@ -1,7 +1,6 @@
 # backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
 import webbrowser
 import threading
 import time
@@ -11,11 +10,18 @@ import sys
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Import from the project's modules
-from app.api.v1.api import api_router
+# Import database and models for initialization
+from backend.app.database import engine
+from backend.app.models import user
+
+# Create database tables
+user.Base.metadata.create_all(bind=engine)
+
+# Import API router
+from backend.app.api.v1.api import api_router
 
 # Your Wix site URL
-WIX_SITE_URL = "https://arwajlokhandwala.wixstudio.com/my-site"  # Replace with your actual Wix site URL
+WIX_SITE_URL = "https://your-wix-site-url.com"  # Replace with your actual Wix site URL
 
 app = FastAPI(
     title="Math & Algorithms Platform",
@@ -23,7 +29,7 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# CORS settings - make sure to include your Wix site domain
+# CORS settings
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # You can restrict this to your Wix domain for security
@@ -33,9 +39,9 @@ app.add_middleware(
 )
 
 # Root endpoint that redirects to your Wix site
-@app.get("/", response_class=RedirectResponse)
+@app.get("/")
 async def root():
-    return WIX_SITE_URL
+    return {"message": "Welcome to Math & Algorithms API"}
 
 # Include API router
 app.include_router(api_router, prefix="/api/v1")

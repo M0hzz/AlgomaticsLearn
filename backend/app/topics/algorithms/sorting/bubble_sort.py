@@ -1,4 +1,4 @@
-# backend/app/topics/algorithms/sorting/implementations/bubble_sort.py
+# backend/app/topics/algorithms/sorting/bubble_sort.py
 from typing import List, Dict, Any
 
 def bubble_sort(arr: List[int]) -> List[int]:
@@ -12,6 +12,7 @@ def bubble_sort(arr: List[int]) -> List[int]:
         Sorted list of integers
     """
     n = len(arr)
+    # Create a copy to avoid modifying the original
     result = arr.copy()
 
     # Traverse through all array elements

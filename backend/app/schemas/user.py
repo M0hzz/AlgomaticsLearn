@@ -1,6 +1,7 @@
 # backend/app/schemas/user.py
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
 
 class UserBase(BaseModel):
     email: Optional[EmailStr] = None
@@ -17,9 +18,11 @@ class UserUpdate(UserBase):
 
 class UserInDBBase(UserBase):
     id: int
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True
+        from_attributes = True  # Updated from orm_mode=True for Pydantic v2
 
 class User(UserInDBBase):
     pass
@@ -27,6 +30,6 @@ class User(UserInDBBase):
 class UserInDB(UserInDBBase):
     hashed_password: str
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class UserResponse(User):
+    access_token: Optional[str] = None
+    token_type: Optional[str] = None
