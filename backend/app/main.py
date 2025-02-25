@@ -1,4 +1,5 @@
 # backend/app/main.py
+from .database import engine
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import webbrowser
@@ -9,6 +10,7 @@ import sys
 
 # Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 # Import database and models for initialization
 from backend.app.database import engine
@@ -21,7 +23,7 @@ user.Base.metadata.create_all(bind=engine)
 from backend.app.api.v1.api import api_router
 
 # Your Wix site URL
-WIX_SITE_URL = "https://your-wix-site-url.com"  # Replace with your actual Wix site URL
+WIX_SITE_URL = "https://your-wix-site-url.com" # Replace with your actual Wix site URL
 
 app = FastAPI(
     title="Math & Algorithms Platform",
