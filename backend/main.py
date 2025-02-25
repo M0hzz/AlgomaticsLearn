@@ -1,15 +1,21 @@
 # backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import sys
+from fastapi.responses import RedirectResponse
+import webbrowser
+import threading
+import time
 import os
+import sys
 
-# Add the parent directory to the Python path to make the imports work
+# Add the parent directory to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import from the project's modules
-from app.api.v1.endpoints import auth, algorithms
-from fastapi import APIRouter
+from app.api.v1.api import api_router
+
+# Your Wix site URL
+WIX_SITE_URL = "https://arwajlokhandwala.wixstudio.com/my-site"  # Replace with your actual Wix site URL
 
 app = FastAPI(
     title="Math & Algorithms Platform",
@@ -17,27 +23,36 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# CORS settings
+# CORS settings - make sure to include your Wix site domain
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your frontend URL
+    allow_origins=["*"],  # You can restrict this to your Wix domain for security
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
+# Root endpoint that redirects to your Wix site
+@app.get("/", response_class=RedirectResponse)
 async def root():
-    return {"message": "Welcome to Math & Algorithms API"}
-
-# Create API router
-api_router = APIRouter()
-api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
-api_router.include_router(algorithms.router, prefix="/algorithms", tags=["algorithms"])
+    return WIX_SITE_URL
 
 # Include API router
 app.include_router(api_router, prefix="/api/v1")
 
+# Function to open the Wix site in browser
+def open_browser():
+    # Wait for server to start
+    time.sleep(2)
+    # Open the Wix site in the default browser
+    webbrowser.open(WIX_SITE_URL)
+    print(f"Opened Wix site: {WIX_SITE_URL}")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+
+    # Start a thread to open the browser
+    threading.Thread(target=open_browser).start()
+
+    # Run the FastAPI server
+    uvicorn.run(app, host="0.0.0.0", port=8000)
