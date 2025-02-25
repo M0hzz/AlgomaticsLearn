@@ -21,7 +21,7 @@ Base = declarative_base()
 # MongoDB connection (for algorithm data)
 MONGO_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017/")
 mongo_client = MongoClient(MONGO_URL)
-algorithm_db = mongo_client.algorithm_database
+algorithm_db = mongo_client["algorithm_database"] #using db name directly instead of referring to it
 
 # Redis connection (for caching)
 redis_client = redis.Redis(
