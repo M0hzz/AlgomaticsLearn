@@ -4,14 +4,14 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, Field
 from bson.objectid import ObjectId
-from app.auth.utils import (
+from backend.app.auth.utils import (
     get_password_hash,
     verify_password,
     create_access_token,
     get_current_active_user
 )
-from app.db import get_collection, USERS_COLLECTION
-from app.config import settings
+from backend.app.db import get_collection, USERS_COLLECTION
+from backend.app.config import settings
 
 router = APIRouter()
 

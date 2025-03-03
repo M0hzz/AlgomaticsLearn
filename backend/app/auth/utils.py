@@ -5,8 +5,8 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
-from app.config import settings
-from app.db import get_collection, USERS_COLLECTION
+from backend.app.config import settings
+from backend.app.db import get_collection, USERS_COLLECTION
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
